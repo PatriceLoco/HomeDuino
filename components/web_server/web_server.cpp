@@ -157,14 +157,13 @@ float WebServer::get_setup_priority() const { return setup_priority::WIFI - 1.0f
 
 #ifdef USE_WEBSERVER_LOCAL
 void WebServer::handle_index_request(AsyncWebServerRequest *request) {
-  AsyncWebServerResponse *response = request->beginResponse_P(200, "text/plain", "HOLA", 4);
+  AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", INDEX_GZ, sizeof(INDEX_GZ));
   response->addHeader("Content-Encoding", "gzip");
   request->send(response);
 }
 #elif USE_WEBSERVER_VERSION >= 2
 void WebServer::handle_index_request(AsyncWebServerRequest *request) {
-  AsyncWebServerResponse *response =
-      request->beginResponse_P(200, "text/plain", "HOLA", 4);
+  request->beginResponse_P(200, "text/html", ESPHOME_WEBSERVER_INDEX_HTML, ESPHOME_WEBSERVER_INDEX_HTML_SIZE);
   // No gzip header here because the HTML file is so small
   request->send(response);
 }
@@ -216,6 +215,13 @@ void WebServer::handle_js_request(AsyncWebServerRequest *request) {
 #define set_json_icon_state_value(root, obj, sensor, state, value, start_config) \
   set_json_value(root, obj, sensor, value, start_config); \
   (root)["state"] = state;
+
+void WebServer::handle_orden_request(AsyncWebServerRequest *request, const UrlMatch &match) {
+  // request->send(200);
+  request->send(200, "text/html", "has enviado una orden");
+  return;
+  // request->send(200, "application/json", data.c_str());
+}
 
 #ifdef USE_SENSOR
 void WebServer::on_sensor_update(sensor::Sensor *obj, float state) {
@@ -524,6 +530,8 @@ void WebServer::on_light_update(light::LightState *obj) {
   this->events_.send(this->light_json(obj, DETAIL_STATE).c_str(), "state");
 }
 void WebServer::handle_light_request(AsyncWebServerRequest *request, const UrlMatch &match) {
+  request->send(200, "text/html", "has enviado una orden");
+  return;
   for (light::LightState *obj : App.get_lights()) {
     if (obj->get_object_id() != match.id)
       continue;
@@ -1703,6 +1711,7 @@ bool WebServer::canHandle(AsyncWebServerRequest *request) {
   return false;
 }
 void WebServer::handleRequest(AsyncWebServerRequest *request) {
+  
   if (request->url() == "/") {
     this->handle_index_request(request);
     return;
@@ -1729,7 +1738,18 @@ void WebServer::handleRequest(AsyncWebServerRequest *request) {
   }
 #endif
 
+// if (match.domain == "orden") {
+//   this->handle_orden_request(request, match);
+//   return;
+// }
+
   UrlMatch match = match_url(request->url().c_str());
+
+  if (match.domain == "orden") {
+    this->handle_orden_request(request, match);
+    return;
+  }
+
 #ifdef USE_SENSOR
   if (match.domain == "sensor") {
     this->handle_sensor_request(request, match);
