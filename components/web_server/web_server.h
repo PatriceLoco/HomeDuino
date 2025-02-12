@@ -148,6 +148,8 @@ class WebServer : public Controller, public Component, public AsyncWebHandler {
   void handle_pna_cors_request(AsyncWebServerRequest *request);
 #endif
 
+void handle_orden_request(AsyncWebServerRequest *request, const UrlMatch &match);
+
 #ifdef USE_SENSOR
   void on_sensor_update(sensor::Sensor *obj, float state) override;
   /// Handle a sensor request under '/sensor/<id>'.
