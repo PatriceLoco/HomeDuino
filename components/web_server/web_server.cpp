@@ -164,7 +164,7 @@ void WebServer::handle_index_request(AsyncWebServerRequest *request) {
 #elif USE_WEBSERVER_VERSION >= 2
 void WebServer::handle_index_request(AsyncWebServerRequest *request) {
   AsyncWebServerResponse *response =
-      request->beginResponse_P(200, "text/html", ESPHOME_WEBSERVER_INDEX_HTML, ESPHOME_WEBSERVER_INDEX_HTML_SIZE);
+      request->beginResponse_P(200, "text/plain", "HOLA", 4);
   // No gzip header here because the HTML file is so small
   request->send(response);
 }
