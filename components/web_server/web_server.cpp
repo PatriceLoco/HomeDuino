@@ -218,7 +218,8 @@ void WebServer::handle_js_request(AsyncWebServerRequest *request) {
 
 // --------------- patriceloco -------------------
 void WebServer::handle_orden_request(AsyncWebServerRequest *request, const UrlMatch &match) {
-  request->send(200, "text/html", "has enviado una orden");
+  String orden = match.id;
+  request->send(200, "text/html", ("has enviado la orden: " + orden).c_str());
   return;
 }
 // -----------------------------------------------
@@ -531,7 +532,6 @@ void WebServer::on_light_update(light::LightState *obj) {
   this->events_.send(this->light_json(obj, DETAIL_STATE).c_str(), "state");
 }
 void WebServer::handle_light_request(AsyncWebServerRequest *request, const UrlMatch &match) {
-  ESP_LOGD(TAG, "handle_light_request");
   for (light::LightState *obj : App.get_lights()) {
     if (obj->get_object_id() != match.id)
       continue;
@@ -1607,7 +1607,6 @@ bool WebServer::canHandle(AsyncWebServerRequest *request) {
 #endif
 
   UrlMatch match = match_url(request->url().c_str(), true);
-  ESP_LOGD(TAG, match.domain.c_str());
   // --------------- patriceloco -------------------
   if (request->method() == HTTP_GET && match.domain == "orden")
     return true;
@@ -1747,6 +1746,7 @@ void WebServer::handleRequest(AsyncWebServerRequest *request) {
 
   UrlMatch match = match_url(request->url().c_str());
   ESP_LOGD(TAG, match.domain.c_str());
+  ESP_LOGD(TAG, match.id.c_str());
   // --------------- patriceloco -------------------
   if (match.domain == "orden") {
     this->handle_orden_request(request, match);
