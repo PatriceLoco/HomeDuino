@@ -1605,6 +1605,7 @@ bool WebServer::canHandle(AsyncWebServerRequest *request) {
 #endif
 
   UrlMatch match = match_url(request->url().c_str(), true);
+  ESP_LOGCONFIG(TAG, match.domain.c_str());
   // --------------- patriceloco -------------------
   if (request->method() == HTTP_GET && match.domain == "orden")
     return true;
@@ -1743,7 +1744,7 @@ void WebServer::handleRequest(AsyncWebServerRequest *request) {
 #endif
 
   UrlMatch match = match_url(request->url().c_str());
-
+  ESP_LOGCONFIG(TAG, match.domain.c_str());
   // --------------- patriceloco -------------------
   if (match.domain == "orden") {
     this->handle_orden_request(request, match);
