@@ -34,6 +34,7 @@
 #endif
 #endif
 
+extern String procesarOrden(String Datos, String pasoDatos);
 namespace esphome {
 namespace web_server {
 
