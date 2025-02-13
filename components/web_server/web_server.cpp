@@ -218,8 +218,10 @@ void WebServer::handle_js_request(AsyncWebServerRequest *request) {
 
 // --------------- patriceloco -------------------
 void WebServer::handle_orden_request(AsyncWebServerRequest *request, const UrlMatch &match) {
-  std::string orden = match.id;
-  request->send(200, "text/html", ("has enviado la orden: " + orden).c_str());
+  procesarOrden(String(match.id), String match.metod);
+  std::string Datos = match.id;
+  std::string pasoDatos = match.metod;
+  request->send(200, "text/html", ("has enviado la orden: " + Datos + " - " + pasoDatos).c_str());
   return;
 }
 // -----------------------------------------------
