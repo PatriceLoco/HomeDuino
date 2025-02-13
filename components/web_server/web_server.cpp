@@ -163,7 +163,7 @@ void WebServer::handle_index_request(AsyncWebServerRequest *request) {
 }
 #elif USE_WEBSERVER_VERSION >= 2
 void WebServer::handle_index_request(AsyncWebServerRequest *request) {
-  AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ESPHOME_WEBSERVER_INDEX_HTML, ESPHOME_WEBSERVER_INDEX_HTML_SIZE);
+  request->beginResponse_P(200, "text/html", ESPHOME_WEBSERVER_INDEX_HTML, ESPHOME_WEBSERVER_INDEX_HTML_SIZE);
   // No gzip header here because the HTML file is so small
   request->send(response);
 }
@@ -531,6 +531,7 @@ void WebServer::on_light_update(light::LightState *obj) {
   this->events_.send(this->light_json(obj, DETAIL_STATE).c_str(), "state");
 }
 void WebServer::handle_light_request(AsyncWebServerRequest *request, const UrlMatch &match) {
+  ESP_LOGD(TAG, "handle_light_request");
   for (light::LightState *obj : App.get_lights()) {
     if (obj->get_object_id() != match.id)
       continue;
@@ -545,7 +546,8 @@ void WebServer::handle_light_request(AsyncWebServerRequest *request, const UrlMa
       request->send(200, "application/json", data.c_str());
     } else if (match.method == "toggle") {
       this->schedule_([obj]() { obj->toggle().perform(); });
-      request->send(200);
+      // request->send(200);
+      request->send(200, "text/html", "light toggle");    // patriceloco
     } else if (match.method == "turn_on") {
       auto call = obj->turn_on();
       if (request->hasParam("brightness")) {
@@ -1605,7 +1607,7 @@ bool WebServer::canHandle(AsyncWebServerRequest *request) {
 #endif
 
   UrlMatch match = match_url(request->url().c_str(), true);
-  ESP_LOGCONFIG(TAG, match.domain.c_str());
+  ESP_LOGD(TAG, match.domain.c_str());
   // --------------- patriceloco -------------------
   if (request->method() == HTTP_GET && match.domain == "orden")
     return true;
@@ -1744,7 +1746,7 @@ void WebServer::handleRequest(AsyncWebServerRequest *request) {
 #endif
 
   UrlMatch match = match_url(request->url().c_str());
-  ESP_LOGCONFIG(TAG, match.domain.c_str());
+  ESP_LOGD(TAG, match.domain.c_str());
   // --------------- patriceloco -------------------
   if (match.domain == "orden") {
     this->handle_orden_request(request, match);
