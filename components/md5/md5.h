@@ -9,7 +9,7 @@
 #endif
 
 #if defined(USE_ARDUINO) && defined(USE_ESP32)
-// #include "rom/md5_hash.h"
+#include "md5_hasho.h"
 #define MD5_CTX_TYPE MD5Context
 #endif
 
