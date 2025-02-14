@@ -170,6 +170,7 @@ async def to_code(config):
         cg.add_library("HTTPClient", None)
 
     await cg.register_component(var, config)
+    cg.add_library("mobizt/FirebaseClient", "1.3.5")
 
 
 HTTP_REQUEST_ACTION_SCHEMA = cv.Schema(
