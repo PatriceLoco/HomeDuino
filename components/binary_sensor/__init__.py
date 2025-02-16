@@ -589,3 +589,4 @@ async def to_code(config):
     cg.add_global(binary_sensor_ns.using)
     cg.add_library("mobizt/FirebaseClient", "1.3.5")
     cg.add_library("PaulStoffregen/Time", "1.5")
+    cg.add_library("olikraus/u8g2", "2.36.4")
