@@ -591,4 +591,4 @@ async def to_code(config):
     cg.add_library("PaulStoffregen/Time", "1.5")
     cg.add_library("olikraus/u8g2", "2.36.4")
     cg.add_library("adafruit/RTClib", "2.1.4")
-    cg.add_library("adafruit/Adafruit_BusIO", "1.17.0")
+    cg.add_library("adafruit/Adafruit_BusIO", "1.16.0")
